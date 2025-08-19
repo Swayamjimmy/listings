@@ -32,7 +32,7 @@ const CreatePage = () => {
                 duration: 5000,
                 isClosable: true,
             });
-            setNewProduct({ name: '', price: '', image: '' }); // Reset form
+            setNewProduct({ name: '', price: '', image: '' });
         }
     };
 
