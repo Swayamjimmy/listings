@@ -3,6 +3,8 @@ import React from 'react'
 import { useState } from 'react'
 import { Input, Box, Heading, useColorModeValue } from '@chakra-ui/react';
 import { useProductStore } from '../store/product.js';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const CreatePage = () => {
@@ -13,6 +15,7 @@ const CreatePage = () => {
     });
     const toast = useToast();
     const {createProduct} = useProductStore(); 
+    const navigate = useNavigate();
     const handleAddProduct = async () => {
         const { success, message } = await createProduct(newProduct);
         if(!success){
@@ -33,6 +36,8 @@ const CreatePage = () => {
                 isClosable: true,
             });
             setNewProduct({ name: '', price: '', image: '' });
+
+            navigate('/');
         }
     };
 
@@ -69,7 +74,7 @@ const CreatePage = () => {
                     colorScheme="teal"
                     onClick={handleAddProduct}
                     width="full">
-                        Add Product
+                    Add Product
                     </Button>
                 </VStack>
             </Box>
