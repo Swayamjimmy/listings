@@ -2,9 +2,6 @@
 import User from '../models/User.model.js';
 import { generateToken } from '../middleware/auth.js';
 
-// @desc    Register new user
-// @route   POST /api/auth/register
-// @access  Public
 export const registerUser = async (req, res) => {
   try {
     const { username, email, password, storeName, storeDescription } = req.body;
@@ -77,9 +74,6 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// @desc    Auth user & get token
-// @route   POST /api/auth/login
-// @access  Public
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -115,9 +109,6 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// @desc    Get user data
-// @route   GET /api/auth/me
-// @access  Private
 export const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -135,9 +126,6 @@ export const getMe = async (req, res) => {
   }
 };
 
-// @desc    Get user's store info by username
-// @route   GET /api/auth/store/:username
-// @access  Public
 export const getUserStore = async (req, res) => {
   try {
     const { username } = req.params;

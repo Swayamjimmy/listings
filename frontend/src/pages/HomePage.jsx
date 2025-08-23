@@ -57,7 +57,7 @@ const HomePage = () => {
               lineHeight="tall"
             >
               Create a beautiful product catalog, share it with the world, and 
-              manage everything from your personal dashboard. No coding required.
+              manage everything from your personal dashboard.
             </Text>
             <HStack spacing={4} pt={4}>
               <Button
@@ -68,7 +68,7 @@ const HomePage = () => {
                 rightIcon={<FiArrowRight />}
                 _hover={{ transform: "translateY(-2px)" }}
               >
-                Get Started Free
+                Get Started
               </Button>
               <Button
                 as={Link}

@@ -2,9 +2,6 @@
 import mongoose from "mongoose";
 import Product from "../models/Product.model.js";
 
-// @desc    Get all products for a specific user
-// @route   GET /api/products
-// @access  Private (for authenticated user's products) or Public (for viewing by username)
 export const getProducts = async (req, res) => {
   try {
     let products;
@@ -46,9 +43,6 @@ export const getProducts = async (req, res) => {
   }
 };
 
-// @desc    Create new product
-// @route   POST /api/products
-// @access  Private
 export const createProduct = async (req, res) => {
   const { name, price, image, description } = req.body;
 
@@ -87,9 +81,6 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// @desc    Update product
-// @route   PUT /api/products/:id
-// @access  Private (only owner can update)
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
 
@@ -138,9 +129,6 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// @desc    Delete product
-// @route   DELETE /api/products/:id
-// @access  Private (only owner can delete)
 export const deleteProduct = async (req, res) => {
   const { id } = req.params;
 
