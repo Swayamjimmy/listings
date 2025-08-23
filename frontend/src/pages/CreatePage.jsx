@@ -1,86 +1,152 @@
-import { Button, Container, VStack, useToast } from '@chakra-ui/react';
-import React from 'react'
-import { useState } from 'react'
-import { Input, Box, Heading, useColorModeValue } from '@chakra-ui/react';
-import { useProductStore } from '../store/product.js';
-import { useNavigate } from 'react-router-dom';
-
-
+// frontend/src/pages/CreatePage.jsx
+import {
+  Box,
+  Button,
+  Container,
+  Heading,
+  Input,
+  useColorModeValue,
+  useToast,
+  VStack,
+  Textarea,
+  FormControl,
+  FormLabel,
+  Text,
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { useNavigate, Navigate } from "react-router-dom";
+import { useProductStore } from "../store/product";
+import useAuthStore from "../store/auth";
 
 const CreatePage = () => {
-    const [newProduct, setNewProduct] = useState({
-        name: '',
-        price: '',
-        image: '',
-    });
-    const toast = useToast();
-    const {createProduct} = useProductStore(); 
-    const navigate = useNavigate();
-    const handleAddProduct = async () => {
-        const { success, message } = await createProduct(newProduct);
-        if(!success){
-            toast({
-                title: "Error",
-                description: message,
-                status: "error",
-                duration: 5000,
-                isClosable: true,
-            });
-            return;
-        } else {
-            toast({
-                title: "Success",
-                description: message,
-                status: "success",
-                duration: 5000,
-                isClosable: true,
-            });
-            setNewProduct({ name: '', price: '', image: '' });
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    price: "",
+    image: "",
+    description: "",
+  });
 
-            navigate('/');
-        }
-    };
+  const { createProduct } = useProductStore();
+  const { isAuthenticated, user } = useAuthStore();
+  const toast = useToast();
+  const navigate = useNavigate();
 
+  // Call hooks before any conditional logic
+  const bgColor = useColorModeValue("white", "gray.800");
+
+  // Redirect if not authenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const handleAddProduct = async () => {
+    const result = await createProduct(newProduct);
+    
+    if (result.success) {
+      toast({
+        title: "Success",
+        description: result.message,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      setNewProduct({ name: "", price: "", image: "", description: "" });
+      navigate("/dashboard");
+    } else {
+      toast({
+        title: "Error", 
+        description: result.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
 
   return (
     <Container maxW={"container.sm"}>
-        <VStack spacing={8}>
-            <Heading as="h1" size="2xl" textAlign="center" mb="8">
-                Create New Product
-            </Heading>
-            <Box
-            w={"full"} bg={useColorModeValue('white', 'gray.800')} p={6} borderRadius="md" boxShadow="lg">
-                <VStack spacing={4}>
-                    <Input 
-                    placeholder="Product Name"
-                    name="name"
-                    value={newProduct.name}
-                    onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
-                    />
-                    <Input
-                    placeholder="Product Price"
-                    name="price"
-                    type="number"
-                    value={newProduct.price}
-                    onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
-                    />
-                    <Input
-                    placeholder="Image URL"
-                    name="image"
-                    value={newProduct.image}
-                    onChange={(e) => setNewProduct({...newProduct, image: e.target.value})}
-                    />
-                    <Button
-                    colorScheme="teal"
-                    onClick={handleAddProduct}
-                    width="full">
-                    Add Product
-                    </Button>
-                </VStack>
-            </Box>
-        </VStack>
-    </Container>
-  )
-}
+      <VStack spacing={8}>
+        <Heading as={"h1"} size={"2xl"} textAlign={"center"} mb={8}>
+          Add New Product
+        </Heading>
+        
+        <Text textAlign="center" color="gray.500">
+          Adding to <Text as="span" fontWeight="bold" color="blue.500">{user?.storeName}</Text>
+        </Text>
 
-export default CreatePage
+        <Box
+          w={"full"}
+          bg={bgColor}
+          p={6}
+          rounded={"lg"}
+          shadow={"md"}
+        >
+          <VStack spacing={4}>
+            <FormControl isRequired>
+              <FormLabel>Product Name</FormLabel>
+              <Input
+                placeholder="Enter product name"
+                name="name"
+                value={newProduct.name}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, name: e.target.value })
+                }
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <FormLabel>Price (₹)</FormLabel>
+              <Input
+                placeholder="Enter price"
+                name="price"
+                type="number"
+                step="0.01"
+                min="0"
+                value={newProduct.price}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, price: e.target.value })
+                }
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <FormLabel>Image URL</FormLabel>
+              <Input
+                placeholder="https://example.com/image.jpg"
+                name="image"
+                value={newProduct.image}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, image: e.target.value })
+                }
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>Description</FormLabel>
+              <Textarea
+                placeholder="Enter product description (optional)"
+                name="description"
+                value={newProduct.description}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, description: e.target.value })
+                }
+                rows={4}
+              />
+            </FormControl>
+
+            <Button 
+              colorScheme="blue" 
+              onClick={handleAddProduct} 
+              w="full" 
+              size="lg"
+            >
+              Add Product
+            </Button>
+          </VStack>
+        </Box>
+      </VStack>
+    </Container>
+  );
+};
+
+export default CreatePage;
